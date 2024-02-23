@@ -8,7 +8,7 @@ import phantom
 
 
 def run():
-    wallets_file = 'Data/Web3 wallets.xlsx'
+    wallets_file = 'data/Web3 wallets.xlsx'
     wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'investment'])
 
     # run analysis for the three wallets
