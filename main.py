@@ -5,16 +5,20 @@ import pandas as pd
 import keplr
 import metamask
 import phantom
+import yaml
 
 
 def run():
+    with open('config.yml', 'r') as file:
+        config = yaml.safe_load(file)
+
     wallets_file = 'data/Web3 wallets.xlsx'
     wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'investment'])
 
     # run analysis for the three wallets
-    phantom.run(data=wallets['phantom'])
-    keplr.run(data=wallets['keplr'])
-    metamask.run(data=wallets['metamask'])
+    phantom_data = phantom.run(data=wallets['phantom'])
+    keplr_data = keplr.run(data=wallets['keplr'])
+    metamask_data = metamask.run(data=wallets['metamask'])
 
 
 if __name__ == "__main__":
