@@ -1,5 +1,5 @@
 """
-This scrip runs the analysis for the metamask wallet
+This script runs the analysis for the metamask wallet
 """
 
 
