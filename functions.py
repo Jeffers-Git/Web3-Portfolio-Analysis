@@ -5,7 +5,7 @@ import requests
 import pandas as pd
 
 
-def get_crypto_prices_coinmarketcap(data, wallet=None):
+def get_crypto_prices_coinmarketcap(data):
     # Coinmarketcap API
     api_key = 'b6d2dd7f-93c1-473e-b763-47db602a2f0e'
     # Set up the request headers

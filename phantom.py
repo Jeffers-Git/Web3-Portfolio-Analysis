@@ -11,7 +11,7 @@ def run(data):
     data.columns = data.columns.str.lower()
     data['ticker'] = data['ticker'].str.upper()
 
-    data = get_crypto_prices_coinmarketcap(data, wallet='phantom')
+    data = get_crypto_prices_coinmarketcap(data)
 
     value_per_dapp = data.groupby(['app'])['value'].sum()
     # exclude total in case of rerun in debug
