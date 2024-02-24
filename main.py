@@ -5,6 +5,7 @@ import pandas as pd
 import keplr
 import metamask
 import phantom
+import sui
 import yaml
 
 
@@ -19,6 +20,7 @@ def run():
     phantom_data = phantom.run(data=wallets['phantom'])
     keplr_data = keplr.run(data=wallets['keplr'])
     metamask_data = metamask.run(data=wallets['metamask'])
+    sui_data = sui.run(data=wallets['sui'])
 
 
 if __name__ == "__main__":
