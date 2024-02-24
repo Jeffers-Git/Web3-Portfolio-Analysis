@@ -1,5 +1,5 @@
 """
-This scrip runs the analysis for the phantom wallet
+This script runs the analysis for the phantom wallet
 """
 import pandas as pd
 import requests
@@ -24,8 +24,10 @@ def get_crypto_prices(data):
 
     prices['usdc'] = 1
     prices['usdt'] = 1
+    data['prices'] = data['ticker'].map(prices)
+    data['value'] = data['amount'] * data['prices']
 
-    return data, prices
+    return data
 
 
 def run(data):
@@ -35,13 +37,12 @@ def run(data):
     data = data.applymap(lambda x: x.lower() if isinstance(x, str) else x)
     data.columns = data.columns.str.lower()
 
-    data, prices = get_crypto_prices(data)
-    data['prices'] = data['ticker'].map(prices)
-    data['value'] = data['amount']*data['prices']
+    data = get_crypto_prices(data)
 
     value_per_dapp = data.groupby(['app'])['value'].sum()
     # exclude total in case of rerun in debug
     value_per_dapp['total'] = value_per_dapp[value_per_dapp.index != 'total'].sum()
-    value_per_dapp.to_csv('results/value_per_dapp.csv')
+    value_per_dapp = value_per_dapp.round(2)
+    value_per_dapp.to_csv('results/phantomvalue_per_dapp.csv')
 
     return data
