@@ -1,5 +1,7 @@
 ticker,id
-msol,msol
-bsol,blazestake-staked-sol
-pyth,pyth-network
-sol,solana
+MSOL,msol
+BSOL,blazestake-staked-sol
+PYTH,pyth-network
+SOL,solana
+RSWETH,restaked-swell-eth
+RSETH,kelp-dao-restaked-eth
