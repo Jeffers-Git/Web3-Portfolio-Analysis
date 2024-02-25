@@ -4,6 +4,7 @@ This script contains functions used in the analysis
 import requests
 import pandas as pd
 import math
+import numpy as np
 
 
 def get_crypto_prices_coinmarketcap(data):
@@ -32,6 +33,7 @@ def get_crypto_prices_coinmarketcap(data):
 
     data['prices'] = data['ticker'].map(prices)
     data['value'] = data['amount'] * data['prices']
+    data['value'] = np.where(data['purpose'] == 'Borrowing', -data['value'], data['value'])
 
     return data
 
