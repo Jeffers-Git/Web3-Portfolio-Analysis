@@ -60,3 +60,44 @@ def get_crypto_prices_coingecko(data):
     data['value'] = data['amount'] * data['prices']
 
     return data
+
+
+def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_data):
+    """
+    This function calculates relevant metrics for the performance of the wallets
+    :param investments:
+    :param phantom_data:
+    :param keplr_data:
+    :param metamask_data:
+    :param sui_data:
+    :return:
+    """
+    current_value = {'Metric': 'Current value',
+                     'Phantom': phantom_data['value'].sum(),
+                     'Keplr': keplr_data['value'].sum(),
+                     'Metamask': metamask_data['value'].sum(),
+                     'Sui': sui_data['value'].sum()}
+    current_value['Total'] = current_value['Phantom'] + current_value['Keplr'] + \
+                             current_value['Metamask'] + current_value['Sui']
+    roi_absolute = {'Metric': 'Absolute ROI',
+                    'Phantom': current_value['Phantom'] - investments['Phantom'][0],
+                    'Keplr': current_value['Keplr'] - investments['Keplr'][0],
+                    'Metamask': current_value['Metamask'] - investments['Metamask'][0],
+                    'Sui': current_value['Sui'] - investments['Sui'][0],
+                    'Total': current_value['Total'] - investments['Total'][0]}
+    roi_relative = {'Metric': 'ROI (%)',
+                    'Phantom': roi_absolute['Phantom'] / investments['Phantom'][0] * 100,
+                    'Keplr': roi_absolute['Keplr'] / investments['Keplr'][0] * 100,
+                    'Metamask': roi_absolute['Metamask'] / investments['Metamask'][0] * 100,
+                    'Sui': roi_absolute['Sui'] / investments['Sui'][0] * 100,
+                    'Total': roi_absolute['Total'] / investments['Total'][0] * 100}
+    metrics_to_add = [current_value, roi_absolute, roi_relative]
+
+    metrics = investments
+    for metric in metrics_to_add:
+        metrics = metrics.append(metric, ignore_index=True)
+    metrics = metrics.set_index('Metric')
+    metrics = metrics.round(2)
+    metrics.to_csv('results/metrics_table.csv')
+
+    return metrics
