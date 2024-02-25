@@ -17,7 +17,6 @@ def run(data):
     value_per_dapp = data.groupby(['app'])['value'].sum()
     # exclude total in case of rerun in debug
     value_per_dapp['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum()
-    value_per_dapp = value_per_dapp[value_per_dapp != 0]
     value_per_dapp = value_per_dapp.round(2)
     value_per_dapp.to_csv('results/metamask/value_per_dapp.csv')
 
