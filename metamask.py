@@ -12,6 +12,7 @@ def run(data):
     data['ticker'] = data['ticker'].str.upper()
 
     data = get_crypto_prices_coingecko(data)
+    data.to_csv('results/metamask/wallet.csv')
 
     value_per_dapp = data.groupby(['app'])['value'].sum()
     # exclude total in case of rerun in debug
