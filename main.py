@@ -19,7 +19,7 @@ def run():
     wallets_file = 'data/Web3 wallets.xlsx'
     wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'sui', 'investment'])
 
-    # run analysis for the three wallets
+    # run analysis for all wallets
     logging.info("Running the analysis for all wallets...")
     phantom_data = phantom.run(data=wallets['phantom'])
     keplr_data = keplr.run(data=wallets['keplr'])
