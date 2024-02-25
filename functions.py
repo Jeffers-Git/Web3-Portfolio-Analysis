@@ -17,7 +17,7 @@ def get_crypto_prices_coinmarketcap(data):
     }
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
-    tickers = data[~data['ticker'].str.contains('-')]['ticker'].unique()
+    tickers = data[~data['ticker'].str.contains('-|&')]['ticker'].unique()
     tickers = [x for x in tickers if not (isinstance(x, float) and math.isnan(x))]
     prices = {}
     for ticker in tickers:
