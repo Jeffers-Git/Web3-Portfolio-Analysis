@@ -17,10 +17,11 @@ def run():
     with open('config.yml', 'r') as file:
         config = yaml.safe_load(file)
 
+    # read in wallet data
     wallets_file = 'data/Web3 wallets.xlsx'
     wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'sui', 'investment'])
 
-    # run analysis for all wallets
+    # calculate dollar value for all wallets
     logging.info("Running the analysis for all wallets...")
     phantom_data = phantom.run(data=wallets['phantom'])
     keplr_data = keplr.run(data=wallets['keplr'])

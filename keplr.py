@@ -1,5 +1,6 @@
 """
 This script runs the analysis for the keplr wallet
+The coinmarketcap API is used to import token prices
 """
 from functions import get_crypto_prices_coinmarketcap
 

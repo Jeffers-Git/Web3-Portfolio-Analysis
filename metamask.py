@@ -1,5 +1,6 @@
 """
 This script runs the analysis for the metamask wallet
+The coingecko API is used to import token prices
 """
 from functions import get_crypto_prices_coingecko
 

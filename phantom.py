@@ -1,5 +1,6 @@
 """
-This script runs the analysis for the phantom wallet
+This script runs the analysis for the phantom wallet.
+The coinmarketcap API is used to import token prices
 """
 from functions import get_crypto_prices_coinmarketcap
 
@@ -13,7 +14,7 @@ def run(data):
     data = data[data['purpose'] != 'DLMM']
     data['amount'] = data['amount'].astype(float)
 
-    data = get_crypto_prices_coinmarketcap(data)
+    data = get_crypto_prices_coinmarketcap(data, meteora=True)
     data.to_csv('results/phantom/wallet.csv')
 
     value_per_dapp = data.groupby(['app'])['value'].sum()
