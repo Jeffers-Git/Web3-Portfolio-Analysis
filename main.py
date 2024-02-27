@@ -23,11 +23,14 @@ def run():
     wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'sui', 'investment'])
 
     # calculate dollar value for all wallets
-    logging.info("Running the analysis for all wallets...")
+    logging.info("Running the analysis for Phantom wallet...")
     phantom_data = phantom.run(data=wallets['phantom'], config=config['phantom'])
-    keplr_data = keplr.run(data=wallets['keplr'])
-    metamask_data = metamask.run(data=wallets['metamask'])
-    sui_data = sui.run(data=wallets['sui'])
+    logging.info("Running the analysis for Keplr wallet...")
+    keplr_data = keplr.run(data=wallets['keplr'], config=config['keplr'])
+    logging.info("Running the analysis for Metamask wallet...")
+    metamask_data = metamask.run(data=wallets['metamask'], config=config['metamask'])
+    logging.info("Running the analysis for Sui wallet...")
+    sui_data = sui.run(data=wallets['sui'], config=config['sui'])
 
     # create df with relevant metrics
     metrics = calculate_metrics(investments=wallets['investment'], phantom_data=phantom_data, keplr_data=keplr_data,

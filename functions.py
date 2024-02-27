@@ -28,7 +28,7 @@ def get_lp_dlmm_values(data):
     bool_dlmm = input("Do you want to enter new DLMM values? ")
     if bool_dlmm == 'yes':
         for dlmm in dlmm_tickers:
-            dlmm_value = input(f"Enter dollar value for {dlmm} LP: ")
+            dlmm_value = input(f"Enter dollar value for {dlmm} DLMM: ")
             dlmm_value = float(dlmm_value)
             data.loc[data['ticker'] == dlmm, 'value'] = dlmm_value
     elif bool_dlmm == 'no':
