@@ -1,0 +1,6 @@
+
+phantom:
+  run_meteora: True
+  ticker_coingecko: ['MOCKJUP']
+
+
