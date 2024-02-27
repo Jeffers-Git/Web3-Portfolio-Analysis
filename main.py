@@ -14,6 +14,7 @@ from functions import calculate_metrics
 def run():
     logging.basicConfig(level=logging.INFO, format='\033[92m%(asctime)s - %(levelname)s: %(message)s\033[0m')
     logging.info('Maxu farmu activated...')
+    logging.info('Remember to close excel data file!!!')
     with open('config.yml', 'r') as file:
         config = yaml.safe_load(file)
 
@@ -23,7 +24,7 @@ def run():
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for all wallets...")
-    phantom_data = phantom.run(data=wallets['phantom'])
+    phantom_data = phantom.run(data=wallets['phantom'], config=config['phantom'])
     keplr_data = keplr.run(data=wallets['keplr'])
     metamask_data = metamask.run(data=wallets['metamask'])
     sui_data = sui.run(data=wallets['sui'])
