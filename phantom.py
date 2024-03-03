@@ -4,6 +4,7 @@ The coinmarketcap API is used to import token prices
 """
 from functions import get_crypto_prices_coinmarketcap, get_crypto_prices_coingecko, save_to_excel_wallets
 import pandas as pd
+import warnings
 
 
 def run(data, config):
@@ -25,6 +26,11 @@ def run(data, config):
 
     # Replace the wallet sheet with the updated data
     save_to_excel_wallets(data, wallet='phantom')
+
+    # Warn about SOL for fees running low
+    sol_spot = data[(data['app'] == 'Unallocated') & (data['ticker'] == 'SOL')]
+    if sol_spot['amount'].iloc[0] < 0.05:
+        warnings.warn(f"Solana balance for fees are running low: {sol_spot['amount'].iloc[0]}")
 
     value_per_dapp = data.groupby(['app'])['value'].sum()
     # Exclude total in case of rerun in debug
