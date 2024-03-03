@@ -40,8 +40,12 @@ def get_lp_dlmm_values(data):
 
 
 def get_crypto_prices_coinmarketcap(data, meteora=False):
-    # Coinmarketcap API
     data = data.copy()
+    # Get LP and DLMM values
+    if meteora:
+        data = get_lp_dlmm_values(data)
+
+    # Coinmarketcap API
     api_key = 'b6d2dd7f-93c1-473e-b763-47db602a2f0e'
     # Set up the request headers
     headers = {
@@ -67,10 +71,6 @@ def get_crypto_prices_coinmarketcap(data, meteora=False):
     data.loc[:, 'prices'] = data['ticker'].map(prices)
     data.loc[~data['prices'].isna(), 'value'] = data['amount'] * data['prices']
     data.loc[:, 'value'] = np.where(data['purpose'] == 'Borrowing', -data['value'], data['value'])
-
-    # Get LP and DLMM values
-    if meteora:
-        data = get_lp_dlmm_values(data)
 
     return data
 
