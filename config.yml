@@ -1,14 +1,14 @@
 
 phantom:
   run_meteora: True
-  ticker_coingecko: ['MOCKJUP']
+  ticker_coingecko: ['MOCKJUP', 'CWIF', 'GM', 'ROCK']
 
 
 keplr:
 
 
 metamask:
-
+  ticker_coingecko: ['RSWETH']
 
 sui:
 
