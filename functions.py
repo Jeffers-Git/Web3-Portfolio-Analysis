@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 import math
 import numpy as np
+import os
 
 
 def get_lp_dlmm_values(data):
@@ -54,6 +55,7 @@ def get_crypto_prices_coinmarketcap(data, meteora=False):
     }
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
+    data = data.dropna(subset=['ticker'])
     tickers = data[~data['ticker'].str.contains('-|&')]['ticker'].unique()
     tickers = [x for x in tickers if not (isinstance(x, float) and math.isnan(x))]
     prices = {}
@@ -147,6 +149,13 @@ def save_to_excel_wallets(data, wallet='phantom'):
         writer.book.save('data/Web3 wallets.xlsx')
     with pd.ExcelWriter('data/Web3 wallets.xlsx', engine='openpyxl', mode='a') as writer:
         data.to_excel(writer, sheet_name=wallet, index=False)
+
+
+def create_directory(directory_path):
+    # Check if the directory exists
+    if not os.path.exists(directory_path):
+        # If it doesn't exist, create the directory
+        os.makedirs(directory_path)
 
 
 

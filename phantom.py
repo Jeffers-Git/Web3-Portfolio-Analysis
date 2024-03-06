@@ -2,7 +2,8 @@
 This script runs the analysis for the phantom wallet.
 The coinmarketcap API is used to import token prices
 """
-from functions import get_crypto_prices_coinmarketcap, get_crypto_prices_coingecko, save_to_excel_wallets
+from functions import get_crypto_prices_coinmarketcap, get_crypto_prices_coingecko, \
+    save_to_excel_wallets, create_directory
 import pandas as pd
 import warnings
 
@@ -22,6 +23,7 @@ def run(data, config):
     data_rest = data[~data['ticker'].isin(ticker_coingecko)]
     data_rest = get_crypto_prices_coinmarketcap(data_rest, meteora=config['run_meteora'])
     data = pd.concat([data_rest, data_coingecko], ignore_index=True)
+    create_directory('results/phantom/')
     data.to_csv(f'results/phantom/wallet.csv')
 
     # Replace the wallet sheet with the updated data
