@@ -6,6 +6,11 @@ import pandas as pd
 import math
 import numpy as np
 import os
+from matplotlib import pyplot as plt
+import matplotlib.ticker as mticker
+from io import BytesIO
+import reportlab.pdfgen as rl
+from reportlab.lib.units import inch
 
 
 def get_lp_dlmm_values(data):
@@ -112,26 +117,33 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
     :param sui_data:
     :return:
     """
-    current_value = {'Metric': 'Current value',
-                     'Phantom': phantom_data['value'].sum(),
-                     'Keplr': keplr_data['value'].sum(),
-                     'Metamask': metamask_data['value'].sum(),
-                     'Sui': sui_data['value'].sum()}
-    current_value['Total'] = current_value['Phantom'] + current_value['Keplr'] + \
-                             current_value['Metamask'] + current_value['Sui']
+    portfolio_value = {'Metric': 'Portfolio value',
+                       'Phantom': phantom_data['value'].sum() + phantom_data['rewards'].sum(),
+                       'Keplr': keplr_data['value'].sum() + keplr_data['rewards'].sum(),
+                       'Metamask': metamask_data['value'].sum() + metamask_data['rewards'].sum(),
+                       'Sui': sui_data['value'].sum() + sui_data['rewards'].sum()}
+    portfolio_value['Total'] = (portfolio_value['Phantom'] + portfolio_value['Keplr'] +
+                                portfolio_value['Metamask'] + portfolio_value['Sui'])
+    rewards = {'Metric': 'Rewards',
+               'Phantom': phantom_data['rewards'].sum(),
+               'Keplr': keplr_data['rewards'].sum(),
+               'Metamask': metamask_data['rewards'].sum(),
+               'Sui': sui_data['rewards'].sum()}
+    rewards['Total'] = (rewards['Phantom'] + rewards['Keplr'] +
+                        rewards['Metamask'] + rewards['Sui'])
     roi_absolute = {'Metric': 'Absolute ROI',
-                    'Phantom': current_value['Phantom'] - investments['Phantom'][0],
-                    'Keplr': current_value['Keplr'] - investments['Keplr'][0],
-                    'Metamask': current_value['Metamask'] - investments['Metamask'][0],
-                    'Sui': current_value['Sui'] - investments['Sui'][0],
-                    'Total': current_value['Total'] - investments['Total'][0]}
-    roi_relative = {'Metric': 'ROI (%)',
+                    'Phantom': portfolio_value['Phantom'] - investments['Phantom'][0],
+                    'Keplr': portfolio_value['Keplr'] - investments['Keplr'][0],
+                    'Metamask': portfolio_value['Metamask'] - investments['Metamask'][0],
+                    'Sui': portfolio_value['Sui'] - investments['Sui'][0],
+                    'Total': portfolio_value['Total'] - investments['Total'][0]}
+    roi_relative = {'Metric': 'Relative ROI (%)',
                     'Phantom': roi_absolute['Phantom'] / investments['Phantom'][0] * 100,
                     'Keplr': roi_absolute['Keplr'] / investments['Keplr'][0] * 100,
                     'Metamask': roi_absolute['Metamask'] / investments['Metamask'][0] * 100,
                     'Sui': roi_absolute['Sui'] / investments['Sui'][0] * 100,
                     'Total': roi_absolute['Total'] / investments['Total'][0] * 100}
-    metrics_to_add = [current_value, roi_absolute, roi_relative]
+    metrics_to_add = [portfolio_value, rewards, roi_absolute, roi_relative]
 
     metrics = investments
     for metric in metrics_to_add:
@@ -141,6 +153,54 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
     metrics.to_csv('results/metrics_table.csv')
 
     return metrics
+
+
+def plot_roi(df):
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    # Separate data for initial investment, rewards, and absolute ROI
+    investment = df.loc["Initial investment"]
+    total = df.loc["Portfolio value"]
+    roi = df.loc["Absolute ROI"]
+    roi_rel = df.loc['Relative ROI (%)']
+    wallets = df.columns
+
+    plt.xticks(range(len(wallets)), wallets, rotation=45, ha='right')
+
+    # Stacked bar plots
+    ax.bar(range(len(wallets)), investment, label='Initial Investment')
+    # Add initial investment
+    for i, value in enumerate(investment):
+        # Calculate bar center position (assuming bars have width 1)
+        x_pos = i
+        y_pos = value / 2
+        ax.text(x_pos, y_pos, '$'+str(value), ha='center', va='center', fontsize=8)
+
+    bars_roi = ax.bar(range(len(wallets)), roi, bottom=investment, label='ROI', color='green')
+    # Add ROI and total
+    j = 0
+    for i, value in enumerate(roi):
+        # Calculate bar center position (assuming bars have width 1)
+        x_pos = i
+        y_pos = investment[j] + value / 2
+        label = '$' + str(value) + " (" + str(roi_rel[j]) + '%)'
+        ax.text(x_pos, y_pos, label, ha='center', va='center', fontsize=8)
+        total_height = investment[j] + bars_roi[j].get_height() + 270
+        ax.text(x_pos, total_height, '$' + str(total[j]), ha='center', va='top', fontsize=8)
+        j += 1
+
+    # Customize the chart
+    plt.xlabel("Wallets")
+    plt.ylabel(f"Portfolio Value")
+    plt.title(f"Portfolio Value Breakdown per Wallet")
+    plt.xticks(rotation=45, ha='right')
+    plt.legend()
+
+    formatter = mticker.StrMethodFormatter("${x:.2f}")
+    ax.yaxis.set_major_formatter(formatter)
+
+    create_directory('results/plots/')
+    plt.savefig('results/plots/absolute_roi.png')
 
 
 def save_to_excel_wallets(data, wallet='phantom'):
@@ -158,21 +218,3 @@ def create_directory(directory_path):
         os.makedirs(directory_path)
 
 
-
-
-
-
-# meteora_key = 'https://app.meteora.ag/pools/D58yVqQUNk6LWqXoiWfYyskACuUNdF8xi6EYVJGjryFq'
-        # response = requests.get(meteora_key)
-        # meteora = response.json()
-        # selected_dict = []
-        # for d in meteora['data']:
-        #     if 'pool_name' in d and d['pool_name'] == 'BSOL-JUP':
-        #         selected_dict = d
-        #         break
-        #
-        # # Connect to a Solana RPC node
-        # rpc_url = 'https://api.mainnet-beta.solana.com'
-        # solana_client = Client(rpc_url)
-        # solana_client.get_supply()
-        # solana_client.get_account_info()

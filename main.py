@@ -8,7 +8,7 @@ import phantom
 import sui
 import yaml
 import logging
-from functions import calculate_metrics
+from functions import calculate_metrics, plot_roi
 
 
 def run():
@@ -33,8 +33,12 @@ def run():
     sui_data = sui.run(data=wallets['sui'], config=config['sui'])
 
     # create df with relevant metrics
+    logging.info("Creating metrics table and plots...")
     metrics = calculate_metrics(investments=wallets['investment'], phantom_data=phantom_data, keplr_data=keplr_data,
                       metamask_data=metamask_data, sui_data=sui_data)
+
+    # create PDF with plots
+    plot_roi(metrics)
 
     logging.info('Maxu farmu ran succesfully...')
 

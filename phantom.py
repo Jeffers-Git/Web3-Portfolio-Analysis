@@ -34,8 +34,11 @@ def run(data, config):
     if sol_spot['amount'].iloc[0] < 0.05:
         warnings.warn(f"Solana balance for fees are running low: {sol_spot['amount'].iloc[0]}")
 
-    value_per_dapp = data.groupby(['app'])['value'].sum()
+    value_per_dapp = data.groupby(['app'])[['value', 'rewards']].sum()
+    value_per_dapp = value_per_dapp.rename(columns={'value': 'TVL'})
     # Exclude total in case of rerun in debug
+    value_per_dapp['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum(axis=1)
+    value_per_dapp.loc['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum()
     value_per_dapp['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum()
     value_per_dapp = value_per_dapp.round(2)
     value_per_dapp.to_csv('results/phantom/value_per_dapp.csv')

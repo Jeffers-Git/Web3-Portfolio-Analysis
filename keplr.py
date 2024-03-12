@@ -19,14 +19,16 @@ def run(data, config):
     # Replace the wallet sheet with the updated data
     save_to_excel_wallets(data, wallet='keplr')
 
-    value_per_dapp = data.groupby(['app'])['value'].sum()
-    # exclude total in case of rerun in debug
-    value_per_dapp['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum()
+    value_per_dapp = data.groupby(['app'])[['value', 'rewards']].sum()
+    value_per_dapp = value_per_dapp.rename(columns={'value': 'TVL'})
+    # Exclude total in case of rerun in debug
+    value_per_dapp['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum(axis=1)
+    value_per_dapp.loc['Total'] = value_per_dapp[value_per_dapp.index != 'Total'].sum()
     value_per_dapp = value_per_dapp.round(2)
     value_per_dapp.to_csv('results/keplr/value_per_dapp.csv')
 
     value_per_validator = data.groupby(['app', 'validator'])['value'].sum()
-    value_per_validator['Total'] = value_per_dapp['Total']
+    value_per_validator.loc['Total'] = value_per_validator[value_per_validator.index != 'Total'].sum()
     value_per_validator = value_per_validator.round(2)
     value_per_validator.to_csv('results/keplr/value_per_validator.csv')
 
