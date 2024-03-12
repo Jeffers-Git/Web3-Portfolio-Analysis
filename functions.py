@@ -8,9 +8,7 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 import matplotlib.ticker as mticker
-from io import BytesIO
-import reportlab.pdfgen as rl
-from reportlab.lib.units import inch
+import datetime
 
 
 def get_lp_dlmm_values(data):
@@ -151,6 +149,12 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
     metrics = metrics.set_index('Metric')
     metrics = metrics.round(2)
     metrics.to_csv('results/metrics_table.csv')
+
+    # Save metrics over time
+    create_directory('results/metrics over time/')
+    today = datetime.date.today().strftime('%Y-%m-%d')
+    date_path = f'results/metrics over time/{today}.csv'
+    metrics.to_csv(date_path)
 
     return metrics
 
