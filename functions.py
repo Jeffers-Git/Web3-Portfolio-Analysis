@@ -169,7 +169,7 @@ def plot_roi(df):
     roi_rel = df.loc['Relative ROI (%)']
     wallets = df.columns
 
-    plt.xticks(range(len(wallets)), wallets, rotation=45, ha='right')
+    plt.xticks(range(len(wallets)), wallets)
 
     # Stacked bar plots
     ax.bar(range(len(wallets)), investment, label='Initial Investment')
@@ -197,7 +197,6 @@ def plot_roi(df):
     plt.xlabel("Wallets")
     plt.ylabel(f"Portfolio Value")
     plt.title(f"Portfolio Value Breakdown per Wallet")
-    plt.xticks(rotation=45, ha='right')
     plt.legend()
 
     formatter = mticker.StrMethodFormatter("${x:.2f}")
