@@ -1,4 +1,7 @@
 
+wallets:
+  ['Phantom', 'Keplr', 'Metamask', 'Sui', 'Total']
+
 phantom:
   run_meteora: True
   ticker_coingecko: ['MOCKJUP', 'CWIF', 'GM', 'ROCK']

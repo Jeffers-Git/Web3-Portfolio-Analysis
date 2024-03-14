@@ -1,6 +1,7 @@
 """
 This script contains functions used in the analysis
 """
+import logging
 import requests
 import pandas as pd
 import math
@@ -9,6 +10,7 @@ import os
 from matplotlib import pyplot as plt
 import matplotlib.ticker as mticker
 import datetime
+from datetime import date, timedelta
 
 
 def get_lp_dlmm_values(data):
@@ -152,7 +154,7 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
 
     # Save metrics over time
     create_directory('results/metrics over time/')
-    today = datetime.date.today().strftime('%Y-%m-%d')
+    today = date.today().strftime('%Y-%m-%d')
     date_path = f'results/metrics over time/{today}.csv'
     metrics.to_csv(date_path)
 
@@ -204,6 +206,36 @@ def plot_roi(df):
 
     create_directory('results/plots/')
     plt.savefig('results/plots/absolute_roi.png')
+
+
+def calculate_metrics_over_time(metrics, wallet):
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    try:
+        metrics_prev = pd.read_csv(f'results/metrics over time/{yesterday}.csv', index_col=0)
+        pnl_day = metrics.loc['Absolute ROI', wallet] - metrics_prev.loc['Absolute ROI', wallet]
+        pnl_day = pnl_day.round(2)
+    except:
+        pnl_day = 0
+
+    if pnl_day > 0:
+        logging.info(f'Your {wallet} daily PnL is ' + '$' + str(pnl_day) + ' :-)')
+    else:
+        logging.info(f'Your {wallet} daily PnL is ' + '$' + str(pnl_day) + ' :-(')
+
+    if not os.path.exists(f'results/wallets over time/{wallet}_over_time.csv'):
+        df = pd.DataFrame(columns=['Portfolio value', 'Absolute ROI', 'PnL day', 'Rewards'])
+        df.index.name = 'Date'
+        create_directory('results/wallets over time/')
+    else:
+        df = pd.read_csv(f'results/wallets over time/{wallet}_over_time.csv', index_col=0)
+
+    today = str(today)
+    df.loc[today, 'Portfolio value'] = metrics.loc['Portfolio value', wallet]
+    df.loc[today, 'Absolute ROI'] = metrics.loc['Absolute ROI', wallet]
+    df.loc[today, 'PnL day'] = pnl_day
+    df.loc[today, 'Rewards'] = metrics.loc['Rewards', wallet]
+    df.to_csv(f'results/wallets over time/{wallet}_over_time.csv')
 
 
 def save_to_excel_wallets(data, wallet='phantom'):
