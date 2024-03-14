@@ -2,7 +2,9 @@
 This script runs the analysis for the keplr wallet
 The coinmarketcap API is used to import token prices
 """
-from functions import get_crypto_prices_coinmarketcap, save_to_excel_wallets, create_directory
+from functions import (get_crypto_prices_coinmarketcap, get_crypto_prices_coingecko,
+                       save_to_excel_wallets, create_directory)
+import pandas as pd
 
 
 def run(data, config):
@@ -12,7 +14,13 @@ def run(data, config):
     data.columns = data.columns.str.lower()
     data['ticker'] = data['ticker'].str.upper()
 
-    data = get_crypto_prices_coinmarketcap(data)
+    ticker_coingecko = config['ticker_coingecko']
+    data_coingecko = data[data['ticker'].isin(ticker_coingecko)]
+    if not data_coingecko.empty:
+        data_coingecko = get_crypto_prices_coingecko(data_coingecko)
+    data_rest = data[~data['ticker'].isin(ticker_coingecko)]
+    data_rest = get_crypto_prices_coinmarketcap(data_rest)
+    data = pd.concat([data_rest, data_coingecko], ignore_index=True)
     create_directory('results/keplr/')
     data.to_csv('results/keplr/wallet.csv')
 
