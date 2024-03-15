@@ -238,6 +238,39 @@ def calculate_metrics_over_time(metrics, wallet):
     df.to_csv(f'results/wallets over time/{wallet}_over_time.csv')
 
 
+def create_plots_over_time(config):
+    wallets = config['wallets']
+
+    dataframes = {}
+    wallet_data = pd.DataFrame(columns=wallets)
+    metrics = config['metrics']
+    metrics_dict = {}
+    for metric in metrics:
+        for wallet in wallets:
+            data = pd.read_csv(f'results/wallets over time/{wallet}_over_time.csv', index_col=0)
+            dataframes[wallet] = data
+            wallet_data[wallet] = dataframes[wallet][metric]
+        # metrics_dict[metric] = wallet_data
+
+        # Create the plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Plot each column series using a different line style and label
+        for wallet in wallets:
+            ax.plot(wallet_data[wallet], label=wallet, linestyle='-')
+
+        # Customize the plot
+        plt.xlabel('Date')
+        plt.ylabel(metric)
+        plt.title(f'{metric} of all wallets over time')
+        plt.legend()
+        formatter = mticker.StrMethodFormatter("${x:.2f}")
+        ax.yaxis.set_major_formatter(formatter)
+
+        create_directory('results/plots/')
+        plt.savefig(f'results/plots/{metric}_over_time.png')
+
+
 def save_to_excel_wallets(data, wallet='phantom'):
     with pd.ExcelWriter('data/Web3 wallets.xlsx', engine='openpyxl', mode='a') as writer:
         del writer.book[wallet]

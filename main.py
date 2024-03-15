@@ -8,7 +8,7 @@ import phantom
 import sui
 import yaml
 import logging
-from functions import calculate_metrics, plot_roi, calculate_metrics_over_time
+from functions import calculate_metrics, plot_roi, calculate_metrics_over_time, create_plots_over_time
 
 
 def run():
@@ -42,6 +42,8 @@ def run():
 
     for wallet in config['wallets']:
         calculate_metrics_over_time(metrics, wallet=wallet)
+
+    create_plots_over_time(config)
 
     logging.info('Maxu farmu ran succesfully...')
 

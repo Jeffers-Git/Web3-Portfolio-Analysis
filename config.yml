@@ -1,6 +1,9 @@
+#the maximum number of coingecko tokens is 6
 
 wallets:
   ['Phantom', 'Keplr', 'Metamask', 'Sui', 'Total']
+metrics:
+  ['Portfolio value', 'Absolute ROI', 'PnL day', 'Rewards']
 
 phantom:
   run_meteora: True
