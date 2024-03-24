@@ -7,7 +7,7 @@ metrics:
 
 phantom:
   run_meteora: True
-  ticker_coingecko: ['MOCKJUP', 'CWIF', 'GM', 'ROCK']
+  ticker_coingecko: ['MOCKJUP', 'CWIF', 'IQ50', 'ROCK']
 
 
 keplr:

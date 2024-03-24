@@ -61,8 +61,10 @@ def get_crypto_prices_coinmarketcap(data, meteora=False):
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
     data = data.dropna(subset=['ticker'])
-    tickers = data[~data['ticker'].str.contains('-|&')]['ticker'].unique()
-    tickers = [x for x in tickers if not (isinstance(x, float) and math.isnan(x))]
+    tickers = list(data[~data['ticker'].str.contains('-|&')]['ticker'].unique())
+    tickers_rewards = list(data['rewards ticker'].unique())
+    tickers.extend(tickers_rewards)
+    tickers = [x for x in tickers if pd.notna(x) and x]
     prices = {}
     for ticker in tickers:
         params = {
@@ -76,8 +78,13 @@ def get_crypto_prices_coinmarketcap(data, meteora=False):
         prices[ticker] = price
 
     data.loc[:, 'prices'] = data['ticker'].map(prices)
+    data.loc[:, 'rewards prices'] = data['rewards ticker'].map(prices)
     data.loc[~data['prices'].isna(), 'value'] = data['amount'] * data['prices']
     data.loc[:, 'value'] = np.where(data['purpose'] == 'Borrowing', -data['value'], data['value'])
+    data.loc[~data['rewards prices'].isna(), 'rewards value'] = data['rewards'] * data['rewards prices']
+    data['value'].fillna(0, inplace=True)
+    data['rewards value'].fillna(0, inplace=True)
+    data['total value'] = data['value'] + data['rewards value']
 
     return data
 
@@ -87,8 +94,10 @@ def get_crypto_prices_coingecko(data):
     data = data.copy()
     api = "https://api.coingecko.com/api/v3/simple/price"
     crypto_mapping = pd.read_csv('tables/crypto_mapping.csv')
-    tickers = data['ticker'].unique()
-    tickers = [x for x in tickers if not (isinstance(x, float) and math.isnan(x))]
+    tickers = list(data['ticker'].unique())
+    tickers_rewards = list(data['rewards ticker'].unique())
+    tickers.extend(tickers_rewards)
+    tickers = [x for x in tickers if pd.notna(x) and x]
     prices = {}
     for ticker in tickers:
         id = crypto_mapping[crypto_mapping['ticker'] == ticker]['id'].iloc[0]
@@ -102,7 +111,12 @@ def get_crypto_prices_coingecko(data):
         prices[ticker] = price
 
     data.loc[:, 'prices'] = data['ticker'].map(prices)
+    data.loc[:, 'rewards prices'] = data['rewards ticker'].map(prices)
     data.loc[~data['prices'].isna(), 'value'] = data['amount'] * data['prices']
+    data.loc[~data['rewards prices'].isna(), 'rewards value'] = data['rewards'] * data['rewards prices']
+    data['value'].fillna(0, inplace=True)
+    data['rewards value'].fillna(0, inplace=True)
+    data['total value'] = data['value'] + data['rewards value']
 
     return data
 
@@ -118,17 +132,17 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
     :return:
     """
     portfolio_value = {'Metric': 'Portfolio value',
-                       'Phantom': phantom_data['value'].sum() + phantom_data['rewards'].sum(),
-                       'Keplr': keplr_data['value'].sum() + keplr_data['rewards'].sum(),
-                       'Metamask': metamask_data['value'].sum() + metamask_data['rewards'].sum(),
-                       'Sui': sui_data['value'].sum() + sui_data['rewards'].sum()}
+                       'Phantom': phantom_data['total value'].sum(),
+                       'Keplr': keplr_data['total value'].sum(),
+                       'Metamask': metamask_data['total value'].sum(),
+                       'Sui': sui_data['total value'].sum()}
     portfolio_value['Total'] = (portfolio_value['Phantom'] + portfolio_value['Keplr'] +
                                 portfolio_value['Metamask'] + portfolio_value['Sui'])
-    rewards = {'Metric': 'Rewards',
-               'Phantom': phantom_data['rewards'].sum(),
-               'Keplr': keplr_data['rewards'].sum(),
-               'Metamask': metamask_data['rewards'].sum(),
-               'Sui': sui_data['rewards'].sum()}
+    rewards = {'Metric': 'Rewards value',
+               'Phantom': phantom_data['rewards value'].sum(),
+               'Keplr': keplr_data['rewards value'].sum(),
+               'Metamask': metamask_data['rewards value'].sum(),
+               'Sui': sui_data['rewards value'].sum()}
     rewards['Total'] = (rewards['Phantom'] + rewards['Keplr'] +
                         rewards['Metamask'] + rewards['Sui'])
     roi_absolute = {'Metric': 'Absolute ROI',
@@ -234,7 +248,7 @@ def calculate_metrics_over_time(metrics, wallet):
     df.loc[today, 'Portfolio value'] = metrics.loc['Portfolio value', wallet]
     df.loc[today, 'Absolute ROI'] = metrics.loc['Absolute ROI', wallet]
     df.loc[today, 'PnL day'] = pnl_day
-    df.loc[today, 'Rewards'] = metrics.loc['Rewards', wallet]
+    df.loc[today, 'Rewards'] = metrics.loc['Rewards value', wallet]
     df.to_csv(f'results/wallets over time/{wallet}_over_time.csv')
 
 
