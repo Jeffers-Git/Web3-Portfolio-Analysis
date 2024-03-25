@@ -60,7 +60,7 @@ def get_crypto_prices_coinmarketcap(data, meteora=False):
     }
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
-    data = data.dropna(subset=['ticker'])
+    data['ticker'] = data['ticker'].fillna('-')
     tickers = list(data[~data['ticker'].str.contains('-|&')]['ticker'].unique())
     tickers_rewards = list(data['rewards ticker'].unique())
     tickers.extend(tickers_rewards)
