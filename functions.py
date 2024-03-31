@@ -45,10 +45,10 @@ def get_lp_dlmm_values(data):
     return data
 
 
-def get_crypto_prices_coinmarketcap(data, meteora=False):
+def get_crypto_prices_coinmarketcap(data, wallet):
     data = data.copy()
     # Get LP and DLMM values
-    if meteora:
+    if wallet == 'phantom':
         data = get_lp_dlmm_values(data)
 
     # Coinmarketcap API
@@ -121,7 +121,16 @@ def get_crypto_prices_coingecko(data):
     return data
 
 
-def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_data):
+def sum_numeric_values(data):
+    """Sums the values in a dictionary that are not strings."""
+    total_sum = 0
+    for value in data.values():
+        if not isinstance(value, str):
+            total_sum += value
+    return total_sum
+
+
+def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_data, okx_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param investments:
@@ -135,27 +144,29 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
                        'Phantom': phantom_data['total value'].sum(),
                        'Keplr': keplr_data['total value'].sum(),
                        'Metamask': metamask_data['total value'].sum(),
-                       'Sui': sui_data['total value'].sum()}
-    portfolio_value['Total'] = (portfolio_value['Phantom'] + portfolio_value['Keplr'] +
-                                portfolio_value['Metamask'] + portfolio_value['Sui'])
+                       'Sui': sui_data['total value'].sum(),
+                       'OKX': okx_data['total value'].sum()}
+    portfolio_value['Total'] = sum_numeric_values(portfolio_value)
     rewards = {'Metric': 'Rewards value',
                'Phantom': phantom_data['rewards value'].sum(),
                'Keplr': keplr_data['rewards value'].sum(),
                'Metamask': metamask_data['rewards value'].sum(),
-               'Sui': sui_data['rewards value'].sum()}
-    rewards['Total'] = (rewards['Phantom'] + rewards['Keplr'] +
-                        rewards['Metamask'] + rewards['Sui'])
+               'Sui': sui_data['rewards value'].sum(),
+               'OKX': okx_data['rewards value'].sum()}
+    rewards['Total'] = sum_numeric_values(rewards)
     roi_absolute = {'Metric': 'Absolute ROI',
                     'Phantom': portfolio_value['Phantom'] - investments['Phantom'][0],
                     'Keplr': portfolio_value['Keplr'] - investments['Keplr'][0],
                     'Metamask': portfolio_value['Metamask'] - investments['Metamask'][0],
                     'Sui': portfolio_value['Sui'] - investments['Sui'][0],
+                    'OKX': portfolio_value['OKX'] - investments['OKX'][0],
                     'Total': portfolio_value['Total'] - investments['Total'][0]}
     roi_relative = {'Metric': 'Relative ROI (%)',
                     'Phantom': roi_absolute['Phantom'] / investments['Phantom'][0] * 100,
                     'Keplr': roi_absolute['Keplr'] / investments['Keplr'][0] * 100,
                     'Metamask': roi_absolute['Metamask'] / investments['Metamask'][0] * 100,
                     'Sui': roi_absolute['Sui'] / investments['Sui'][0] * 100,
+                    'OKX': roi_absolute['OKX'] / investments['OKX'][0] * 100,
                     'Total': roi_absolute['Total'] / investments['Total'][0] * 100}
     metrics_to_add = [portfolio_value, rewards, roi_absolute, roi_relative]
 
@@ -194,7 +205,7 @@ def plot_roi(df):
         # Calculate bar center position (assuming bars have width 1)
         x_pos = i
         y_pos = value / 2
-        ax.text(x_pos, y_pos, '$'+str(value), ha='center', va='center', fontsize=8)
+        ax.text(x_pos, y_pos, '$' + str(value), ha='center', va='center', fontsize=8)
 
     bars_roi = ax.bar(range(len(wallets)), roi, bottom=investment, label='ROI', color='green')
     # Add ROI and total
@@ -258,13 +269,11 @@ def create_plots_over_time(config):
     dataframes = {}
     wallet_data = pd.DataFrame(columns=wallets)
     metrics = config['metrics']
-    metrics_dict = {}
     for metric in metrics:
         for wallet in wallets:
             data = pd.read_csv(f'results/wallets over time/{wallet}_over_time.csv', index_col=0)
             dataframes[wallet] = data
             wallet_data[wallet] = dataframes[wallet][metric]
-        # metrics_dict[metric] = wallet_data
 
         # Create the plot
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -298,5 +307,3 @@ def create_directory(directory_path):
     if not os.path.exists(directory_path):
         # If it doesn't exist, create the directory
         os.makedirs(directory_path)
-
-
