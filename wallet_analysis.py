@@ -33,7 +33,7 @@ def run(data, config, wallet):
 
     # Warn about SOL for fees running low
     if wallet == 'phantom':
-        sol_spot = data[(data['app'] == 'Unallocated') & (data['ticker'] == 'SOL')]
+        sol_spot = data[(data['app'] == 'Wallet') & (data['ticker'] == 'SOL')]
         if sol_spot['amount'].iloc[0] < 0.05:
             warnings.warn(f"Solana balance for fees are running low: {sol_spot['amount'].iloc[0]}")
 
