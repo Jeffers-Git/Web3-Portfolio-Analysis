@@ -17,7 +17,7 @@ def run():
 
     # read in wallet data
     wallets_file = 'data/Web3 wallets.xlsx'
-    wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'sui', 'okx', 'investment'])
+    wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'trust', 'okx', 'investment'])
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for Phantom wallet...")
@@ -26,15 +26,15 @@ def run():
     keplr_data = wallet_analysis.run(data=wallets['keplr'], config=config['keplr'], wallet='keplr')
     logging.info("Running the analysis for Metamask wallet...")
     metamask_data = wallet_analysis.run(data=wallets['metamask'], config=config['metamask'], wallet='metamask')
-    logging.info("Running the analysis for Sui wallet...")
-    sui_data = wallet_analysis.run(data=wallets['sui'], config=config['sui'], wallet='sui')
+    logging.info("Running the analysis for Trust wallet...")
+    trust_data = wallet_analysis.run(data=wallets['trust'], config=config['trust'], wallet='trust')
     logging.info("Running the analysis for OKX wallet...")
     okx_data = wallet_analysis.run(data=wallets['okx'], config=config['okx'], wallet='okx')
 
     # create df with relevant metrics
     logging.info("Creating metrics tables and plots...")
     metrics = calculate_metrics(investments=wallets['investment'], phantom_data=phantom_data, keplr_data=keplr_data,
-                                metamask_data=metamask_data, sui_data=sui_data, okx_data=okx_data)
+                                metamask_data=metamask_data, trust_data=trust_data, okx_data=okx_data)
 
     # create bar plot with ROI
     plot_roi(metrics)

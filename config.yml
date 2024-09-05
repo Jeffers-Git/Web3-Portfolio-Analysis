@@ -6,7 +6,7 @@ metrics:
   ['Portfolio value', 'Absolute ROI', 'PnL day', 'Rewards']
 
 phantom:
-  run_meteora: True
+  run_meteora: False
   ticker_coingecko: ['CWIF', 'IQ50', 'LST']
 
 
@@ -16,11 +16,11 @@ keplr:
 metamask:
   ticker_coingecko: ['RSWETH']
 
-sui:
+trust:
   ticker_coingecko: []
 
 okx:
-  ticker_coingecko: []
+  ticker_coingecko: ['WEETH']
 
 
 

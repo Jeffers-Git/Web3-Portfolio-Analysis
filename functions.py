@@ -48,8 +48,8 @@ def get_lp_dlmm_values(data):
 def get_crypto_prices_coinmarketcap(data, wallet):
     data = data.copy()
     # Get LP and DLMM values
-    if wallet == 'phantom':
-        data = get_lp_dlmm_values(data)
+    # if wallet == 'phantom':
+    #     data = get_lp_dlmm_values(data)
 
     # Coinmarketcap API
     api_key = 'b6d2dd7f-93c1-473e-b763-47db602a2f0e'
@@ -67,6 +67,8 @@ def get_crypto_prices_coinmarketcap(data, wallet):
     tickers = [x for x in tickers if pd.notna(x) and x]
     prices = {}
     for ticker in tickers:
+        if ticker == 'EIGEN':
+            continue
         params = {
             'symbol': ticker
         }
@@ -82,8 +84,8 @@ def get_crypto_prices_coinmarketcap(data, wallet):
     data.loc[~data['prices'].isna(), 'value'] = data['amount'] * data['prices']
     data.loc[:, 'value'] = np.where(data['purpose'] == 'Borrowing', -data['value'], data['value'])
     data.loc[~data['rewards prices'].isna(), 'rewards value'] = data['rewards'] * data['rewards prices']
-    data['value'].fillna(0, inplace=True)
-    data['rewards value'].fillna(0, inplace=True)
+    data['value'] = data['value'].fillna(0)
+    data['rewards value'] = data['rewards value'].fillna(0)
     data['total value'] = data['value'] + data['rewards value']
 
     return data
@@ -114,8 +116,8 @@ def get_crypto_prices_coingecko(data):
     data.loc[:, 'rewards prices'] = data['rewards ticker'].map(prices)
     data.loc[~data['prices'].isna(), 'value'] = data['amount'] * data['prices']
     data.loc[~data['rewards prices'].isna(), 'rewards value'] = data['rewards'] * data['rewards prices']
-    data['value'].fillna(0, inplace=True)
-    data['rewards value'].fillna(0, inplace=True)
+    data['value'] = data['value'].fillna(0)
+    data['rewards value'] = data['rewards value'].fillna(0)
     data['total value'] = data['value'] + data['rewards value']
 
     return data
@@ -130,7 +132,7 @@ def sum_numeric_values(data):
     return total_sum
 
 
-def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_data, okx_data):
+def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, trust_data, okx_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param investments:
@@ -144,35 +146,35 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, sui_
                        'Phantom': phantom_data['total value'].sum(),
                        'Keplr': keplr_data['total value'].sum(),
                        'Metamask': metamask_data['total value'].sum(),
-                       'Sui': sui_data['total value'].sum(),
+                       'Trust': trust_data['total value'].sum(),
                        'OKX': okx_data['total value'].sum()}
     portfolio_value['Total'] = sum_numeric_values(portfolio_value)
     rewards = {'Metric': 'Rewards value',
                'Phantom': phantom_data['rewards value'].sum(),
                'Keplr': keplr_data['rewards value'].sum(),
                'Metamask': metamask_data['rewards value'].sum(),
-               'Sui': sui_data['rewards value'].sum(),
+               'Trust': trust_data['rewards value'].sum(),
                'OKX': okx_data['rewards value'].sum()}
     rewards['Total'] = sum_numeric_values(rewards)
     roi_absolute = {'Metric': 'Absolute ROI',
                     'Phantom': portfolio_value['Phantom'] - investments['Phantom'][0],
                     'Keplr': portfolio_value['Keplr'] - investments['Keplr'][0],
                     'Metamask': portfolio_value['Metamask'] - investments['Metamask'][0],
-                    'Sui': portfolio_value['Sui'] - investments['Sui'][0],
+                    'Trust': portfolio_value['Trust'] - investments['Trust'][0],
                     'OKX': portfolio_value['OKX'] - investments['OKX'][0],
                     'Total': portfolio_value['Total'] - investments['Total'][0]}
     roi_relative = {'Metric': 'Relative ROI (%)',
                     'Phantom': roi_absolute['Phantom'] / investments['Phantom'][0] * 100,
                     'Keplr': roi_absolute['Keplr'] / investments['Keplr'][0] * 100,
                     'Metamask': roi_absolute['Metamask'] / investments['Metamask'][0] * 100,
-                    'Sui': roi_absolute['Sui'] / investments['Sui'][0] * 100,
+                    'Trust': roi_absolute['Trust'] / investments['Trust'][0] * 100,
                     'OKX': roi_absolute['OKX'] / investments['OKX'][0] * 100,
                     'Total': roi_absolute['Total'] / investments['Total'][0] * 100}
     metrics_to_add = [portfolio_value, rewards, roi_absolute, roi_relative]
 
     metrics = investments
     for metric in metrics_to_add:
-        metrics = metrics.append(metric, ignore_index=True)
+        metrics = metrics._append(metric, ignore_index=True)
     metrics = metrics.set_index('Metric')
     metrics = metrics.round(2)
     metrics.to_csv('results/metrics_table.csv')
