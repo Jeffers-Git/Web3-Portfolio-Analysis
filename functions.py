@@ -132,7 +132,14 @@ def sum_numeric_values(data):
     return total_sum
 
 
-def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, trust_data, okx_data):
+def fill_dict(metric):
+    for i in range(len(keys)):
+        metric[keys[i]] = values[i]
+
+    return metric
+
+
+def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, trust_data, okx_data, solfl_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param investments:
@@ -142,6 +149,19 @@ def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, trus
     :param sui_data:
     :return:
     """
+
+    keys = ['Metric', 'Phantom', 'Keplr', 'Metamask', 'Trust', 'OKX', 'Solflare']
+    values = [phantom_data, keplr_data, metamask_data, trust_data, okx_data, solfl_data]
+
+
+    portfolio_value = {}
+    rewards = {}
+    roi_absolute = {}
+    roi_relative = {}
+    metrics_to_add = []
+    for metric in [portfolio_value, rewards, roi_absolute,roi_relative]:
+        metric = fill_dict(metric)
+        metrics_to_add.concat(metric)
     portfolio_value = {'Metric': 'Portfolio value',
                        'Phantom': phantom_data['total value'].sum(),
                        'Keplr': keplr_data['total value'].sum(),
