@@ -30,6 +30,8 @@ def run():
     trust_data = wallet_analysis.run(data=wallets['trust'], config=config['trust'], wallet='trust')
     logging.info("Running the analysis for OKX wallet...")
     okx_data = wallet_analysis.run(data=wallets['okx'], config=config['okx'], wallet='okx')
+    logging.info("Running the analysis for OKX wallet...")
+    okx_data = wallet_analysis.run(data=wallets['okx'], config=config['okx'], wallet='okx')
 
     # create df with relevant metrics
     logging.info("Creating metrics tables and plots...")

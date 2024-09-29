@@ -1,0 +1,7 @@
+,app,purpose,amount,ticker,remarks,rewards,rewards ticker,prices,value,rewards prices,rewards value,total value
+0,Etherfi,Restaking,0.18,ETH,Liquid,,,2662.8248146641627,479.30846663954924,,0,479.30846663954924
+1,Eigenlayer,Restaking,110.0,EIGEN,,,,,0.0,,0,0.0
+2,Wallet,hodl,0.0111,ETH,,,,2662.8248146641627,29.557355442772206,,0,29.557355442772206
+3,Wallet,hodl,124.0,ETHFI,,,,1.80297332092159,223.56869179427716,,0,223.56869179427716
+4,Wallet,hodl,3.86,EIGEN,,,,,0.0,,0,0.0
+5,Swell,Supply (L2),0.22,RSWETH,,,,2705.62,595.2364,,0,595.2364
