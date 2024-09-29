@@ -1,16 +1,27 @@
+#the maximum number of coingecko tokens is 6
+
+wallets:
+  ['Phantom', 'Keplr', 'Metamask', 'Sui', 'OKX', 'Total']
+metrics:
+  ['Portfolio value', 'Absolute ROI', 'PnL day', 'Rewards']
 
 phantom:
-  run_meteora: True
-  ticker_coingecko: ['MOCKJUP']
+  run_meteora: False
+  ticker_coingecko: ['CWIF', 'IQ50', 'LST']
 
 
 keplr:
-
+  ticker_coingecko: ['STTIA']
 
 metamask:
+  ticker_coingecko: ['RSWETH']
 
+trust:
+  ticker_coingecko: []
 
-sui:
+okx:
+  ticker_coingecko: ['WEETH']
+
 
 
 

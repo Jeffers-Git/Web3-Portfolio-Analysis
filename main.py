@@ -2,13 +2,10 @@
 This is the main script which is used for the Web3 portfolio analysis
 """
 import pandas as pd
-import keplr
-import metamask
-import phantom
-import sui
+import wallet_analysis
 import yaml
 import logging
-from functions import calculate_metrics
+from functions import calculate_metrics, plot_roi, calculate_metrics_over_time, create_plots_over_time
 
 
 def run():
@@ -20,21 +17,34 @@ def run():
 
     # read in wallet data
     wallets_file = 'data/Web3 wallets.xlsx'
-    wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'sui', 'investment'])
+    wallets = pd.read_excel(wallets_file, sheet_name=['phantom', 'keplr', 'metamask', 'trust', 'okx', 'investment'])
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for Phantom wallet...")
-    phantom_data = phantom.run(data=wallets['phantom'], config=config['phantom'])
+    phantom_data = wallet_analysis.run(data=wallets['phantom'], config=config['phantom'], wallet='phantom')
     logging.info("Running the analysis for Keplr wallet...")
-    keplr_data = keplr.run(data=wallets['keplr'], config=config['keplr'])
+    keplr_data = wallet_analysis.run(data=wallets['keplr'], config=config['keplr'], wallet='keplr')
     logging.info("Running the analysis for Metamask wallet...")
-    metamask_data = metamask.run(data=wallets['metamask'], config=config['metamask'])
-    logging.info("Running the analysis for Sui wallet...")
-    sui_data = sui.run(data=wallets['sui'], config=config['sui'])
+    metamask_data = wallet_analysis.run(data=wallets['metamask'], config=config['metamask'], wallet='metamask')
+    logging.info("Running the analysis for Trust wallet...")
+    trust_data = wallet_analysis.run(data=wallets['trust'], config=config['trust'], wallet='trust')
+    logging.info("Running the analysis for OKX wallet...")
+    okx_data = wallet_analysis.run(data=wallets['okx'], config=config['okx'], wallet='okx')
+    logging.info("Running the analysis for OKX wallet...")
+    okx_data = wallet_analysis.run(data=wallets['okx'], config=config['okx'], wallet='okx')
 
     # create df with relevant metrics
+    logging.info("Creating metrics tables and plots...")
     metrics = calculate_metrics(investments=wallets['investment'], phantom_data=phantom_data, keplr_data=keplr_data,
-                      metamask_data=metamask_data, sui_data=sui_data)
+                                metamask_data=metamask_data, trust_data=trust_data, okx_data=okx_data)
+
+    # create bar plot with ROI
+    plot_roi(metrics)
+
+    for wallet in config['wallets']:
+        calculate_metrics_over_time(metrics, wallet=wallet)
+
+    create_plots_over_time(config)
 
     logging.info('Maxu farmu ran succesfully...')
 
