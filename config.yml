@@ -14,13 +14,25 @@ keplr:
   ticker_coingecko: ['STTIA']
 
 metamask:
-  ticker_coingecko: ['RSWETH']
+  ticker_coingecko: ['EIGEN']
 
 trust:
-  ticker_coingecko: []
+  ticker_coingecko: ['EIGEN']
 
 okx:
   ticker_coingecko: ['WEETH']
+
+solflare:
+  ticker_coingecko: []
+
+phantom2:
+  ticker_coingecko: []
+
+solflare2:
+  ticker_coingecko: []
+
+backpack:
+  ticker_coingecko: []
 
 
 

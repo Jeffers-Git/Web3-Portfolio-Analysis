@@ -132,60 +132,47 @@ def sum_numeric_values(data):
     return total_sum
 
 
-def calculate_metrics(investments, phantom_data, keplr_data, metamask_data, trust_data, okx_data):
+def fill_dict(metric, keys, values):
+    for i in range(len(keys)):
+        metric[keys[i]] = values[i]
+
+    return metric
+
+
+def calculate_metrics(phantom_data, metamask_data, trust_data, okx_data, solfl_data, phantom2_data, solfl2_data, backpack_data):
     """
     This function calculates relevant metrics for the performance of the wallets
-    :param investments:
     :param phantom_data:
-    :param keplr_data:
     :param metamask_data:
-    :param sui_data:
+    :param trust_data:
+    :param okx_data:
+    :param solfl_data:
+    :param phantom2_data:
+    :param solfl2_data:
+    :param backpack_data:
     :return:
     """
-    portfolio_value = {'Metric': 'Portfolio value',
-                       'Phantom': phantom_data['total value'].sum(),
-                       'Keplr': keplr_data['total value'].sum(),
-                       'Metamask': metamask_data['total value'].sum(),
-                       'Trust': trust_data['total value'].sum(),
-                       'OKX': okx_data['total value'].sum()}
-    portfolio_value['Total'] = sum_numeric_values(portfolio_value)
-    rewards = {'Metric': 'Rewards value',
-               'Phantom': phantom_data['rewards value'].sum(),
-               'Keplr': keplr_data['rewards value'].sum(),
-               'Metamask': metamask_data['rewards value'].sum(),
-               'Trust': trust_data['rewards value'].sum(),
-               'OKX': okx_data['rewards value'].sum()}
-    rewards['Total'] = sum_numeric_values(rewards)
-    roi_absolute = {'Metric': 'Absolute ROI',
-                    'Phantom': portfolio_value['Phantom'] - investments['Phantom'][0],
-                    'Keplr': portfolio_value['Keplr'] - investments['Keplr'][0],
-                    'Metamask': portfolio_value['Metamask'] - investments['Metamask'][0],
-                    'Trust': portfolio_value['Trust'] - investments['Trust'][0],
-                    'OKX': portfolio_value['OKX'] - investments['OKX'][0],
-                    'Total': portfolio_value['Total'] - investments['Total'][0]}
-    roi_relative = {'Metric': 'Relative ROI (%)',
-                    'Phantom': roi_absolute['Phantom'] / investments['Phantom'][0] * 100,
-                    'Keplr': roi_absolute['Keplr'] / investments['Keplr'][0] * 100,
-                    'Metamask': roi_absolute['Metamask'] / investments['Metamask'][0] * 100,
-                    'Trust': roi_absolute['Trust'] / investments['Trust'][0] * 100,
-                    'OKX': roi_absolute['OKX'] / investments['OKX'][0] * 100,
-                    'Total': roi_absolute['Total'] / investments['Total'][0] * 100}
-    metrics_to_add = [portfolio_value, rewards, roi_absolute, roi_relative]
 
-    metrics = investments
-    for metric in metrics_to_add:
-        metrics = metrics._append(metric, ignore_index=True)
-    metrics = metrics.set_index('Metric')
-    metrics = metrics.round(2)
-    metrics.to_csv('results/metrics_table.csv')
+    keys = ['Metric', 'Phantom', 'Metamask', 'Trust', 'OKX', 'Solflare', 'Phantom2', 'Solflare2', 'Backpack']
+
+    portfolio_value = {}
+
+    port_values = ['Portfolio value', phantom_data['total value'].sum(),
+                   metamask_data['total value'].sum(), trust_data['total value'].sum(), okx_data['total value'].sum(),
+                   solfl_data['total value'].sum(), phantom2_data['total value'].sum(), solfl2_data['total value'].sum(),
+                   backpack_data['total value'].sum()]
+    portfolio_value = fill_dict(portfolio_value, keys, port_values)
+    portfolio_value['Total'] = sum_numeric_values(portfolio_value)
+
+    metrics = pd.Series(portfolio_value)
+    metrics_rounded = metrics.apply(lambda x: round(x, 2) if isinstance(x, (int, float)) else x)
+    metrics_rounded.to_csv('results/metrics_table.csv')
 
     # Save metrics over time
     create_directory('results/metrics over time/')
     today = date.today().strftime('%Y-%m-%d')
     date_path = f'results/metrics over time/{today}.csv'
-    metrics.to_csv(date_path)
-
-    return metrics
+    metrics_rounded.to_csv(date_path)
 
 
 def plot_roi(df):

@@ -44,16 +44,10 @@ def run(data, config, wallet):
     value_per_dapp = value_per_dapp.round(2)
     value_per_dapp.to_csv(f'results/{wallet}/value_per_dapp.csv')
 
-    if wallet == 'phantom':
-        value_per_purpose = data.groupby(['purpose'])['total value'].sum()
-        value_per_purpose['Total'] = value_per_purpose[value_per_purpose.index != 'Total'].sum()
-        value_per_purpose = value_per_purpose[value_per_purpose != 0]
-        value_per_purpose = value_per_purpose.round(2)
-        value_per_purpose.to_csv(f'results/{wallet}/value_per_purpose.csv')
-    elif wallet == 'keplr':
-        value_per_validator = data.groupby(['app', 'validator'])['total value'].sum()
-        value_per_validator.loc['Total'] = value_per_validator[value_per_validator.index != 'Total'].sum()
-        value_per_validator = value_per_validator.round(2)
-        value_per_validator.to_csv(f'results/{wallet}/value_per_validator.csv')
+    value_per_purpose = data.groupby(['purpose'])['total value'].sum()
+    value_per_purpose['Total'] = value_per_purpose[value_per_purpose.index != 'Total'].sum()
+    value_per_purpose = value_per_purpose[value_per_purpose != 0]
+    value_per_purpose = value_per_purpose.round(2)
+    value_per_purpose.to_csv(f'results/{wallet}/value_per_purpose.csv')
 
     return data
