@@ -7,25 +7,12 @@ metrics:
 
 phantom:
   run_meteora: False
-  ticker_coingecko: ['CWIF', 'IQ50', 'LST']
-
-
-keplr:
-  ticker_coingecko: ['STTIA']
-
-metamask:
-  ticker_coingecko: ['EIGEN']
-
-trust:
-  ticker_coingecko: ['EIGEN']
-
-okx:
-  ticker_coingecko: ['WEETH']
-
-solflare:
-  ticker_coingecko: []
+  ticker_coingecko: ['SWTCH']
 
 phantom2:
+  ticker_coingecko: []
+
+solflare:
   ticker_coingecko: []
 
 solflare2:
@@ -33,6 +20,66 @@ solflare2:
 
 backpack:
   ticker_coingecko: []
+
+metamask:
+  ticker_coingecko: ['EIGEN']
+
+okx:
+  ticker_coingecko: ['KAITO']
+
+seeker:
+  ticker_coingecko: []
+
+phantom tablet 1:
+  ticker_coingecko: []
+
+phantom tablet 2:
+  ticker_coingecko: []
+
+solflare tablet 1:
+  ticker_coingecko: []
+
+solflare tablet 2:
+  ticker_coingecko: []
+
+slush laptop 1:
+  ticker_coingecko: []
+
+slush laptop 2:
+  ticker_coingecko: []
+
+backpack laptop 1:
+  ticker_coingecko: []
+
+backpack laptop 2:
+  ticker_coingecko: []
+
+backpack laptop 3:
+  ticker_coingecko: []
+
+backpack laptop 4:
+  ticker_coingecko: []
+
+backpack phone 1:
+  ticker_coingecko: []
+
+backpack phone 2:
+  ticker_coingecko: []
+
+slush phone 1:
+  ticker_coingecko: []
+
+slush phone 2:
+  ticker_coingecko: []
+
+slush phone 3:
+  ticker_coingecko: []
+
+slush phone 4:
+  ticker_coingecko: []
+
+
+
 
 
 

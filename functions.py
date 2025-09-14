@@ -139,7 +139,12 @@ def fill_dict(metric, keys, values):
     return metric
 
 
-def calculate_metrics(phantom_data, metamask_data, trust_data, okx_data, solfl_data, phantom2_data, solfl2_data, backpack_data):
+def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
+                      backpack_data, metamask_data, okx_data, seeker_data,
+                      phantomtablet1_data, phantomtablet2_data, solfltablet1_data, solfltablet2_data,
+                      slushlaptop1_data, slushlaptop2_data, backpacklaptop1_data, backpacklaptop2_data,
+                      backpacklaptop3_data, backpacklaptop4_data, backpackphone1_data, backpackphone2_data,
+                      slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param phantom_data:
@@ -153,14 +158,22 @@ def calculate_metrics(phantom_data, metamask_data, trust_data, okx_data, solfl_d
     :return:
     """
 
-    keys = ['Metric', 'Phantom', 'Metamask', 'Trust', 'OKX', 'Solflare', 'Phantom2', 'Solflare2', 'Backpack']
+    keys = ['Metric', 'Phantom', 'Phantom 2', 'Solflare', 'Solflare 2',
+            'Backpack', 'Metamask', 'OKX', 'Seeker',
+            'Phantom Tablet 1', 'Phantom Tablet 2', 'Solflare Tablet 1', 'Solflare Tablet 2',
+            'Slush Laptop 1', 'Slush Laptop 2', 'Backpack Laptop 1', 'Backpack Laptop 2',
+            'Backpack Laptop 3', 'Backpack Laptop 4', 'Backpack Phone 1', 'Backpack Phone 2',
+            'Slush Phone 1', 'Slush Phone 2', 'Slush Phone 3', 'Slush Phone 4']
+
 
     portfolio_value = {}
 
-    port_values = ['Portfolio value', phantom_data['total value'].sum(),
-                   metamask_data['total value'].sum(), trust_data['total value'].sum(), okx_data['total value'].sum(),
-                   solfl_data['total value'].sum(), phantom2_data['total value'].sum(), solfl2_data['total value'].sum(),
-                   backpack_data['total value'].sum()]
+    port_values = ['Portfolio value', phantom_data['total value'].sum(), phantom2_data['total value'].sum(), solfl_data['total value'].sum(), solfl2_data['total value'].sum(),
+                    backpack_data['total value'].sum(), metamask_data['total value'].sum(), okx_data['total value'].sum(), seeker_data['total value'].sum(),
+                    phantomtablet1_data['total value'].sum(), phantomtablet2_data['total value'].sum(), solfltablet1_data['total value'].sum(), solfltablet2_data['total value'].sum(),
+                    slushlaptop1_data['total value'].sum(), slushlaptop2_data['total value'].sum(), backpacklaptop1_data['total value'].sum(), backpacklaptop2_data['total value'].sum(),
+                    backpacklaptop3_data['total value'].sum(), backpacklaptop4_data['total value'].sum(), backpackphone1_data['total value'].sum(), backpackphone2_data['total value'].sum(),
+                    slushphone1_data['total value'].sum(), slushphone2_data['total value'].sum(), slushphone3_data['total value'].sum(), slushphone4_data['total value'].sum()]
     portfolio_value = fill_dict(portfolio_value, keys, port_values)
     portfolio_value['Total'] = sum_numeric_values(portfolio_value)
 
