@@ -23,7 +23,8 @@ def run():
                                                         'phantom tablet 1', 'phantom tablet 2', 'solflare tablet 1', 'solflare tablet 2',
                                                         'slush laptop 1', 'slush laptop 2', 'backpack laptop 1', 'backpack laptop 2',
                                                         'backpack laptop 3', 'backpack laptop 4', 'backpack phone 1', 'backpack phone 2',
-                                                        'slush phone 1', 'slush phone 2', 'slush phone 3', 'slush phone 4'])
+                                                        'slush phone 1', 'slush phone 2', 'slush phone 3', 'slush phone 4',
+                                                        'bitget', 'bybit', 'photon'])
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for Phantom wallet...")
@@ -87,6 +88,15 @@ def run():
     logging.info("Running the analysis for Slush phone 4 wallet...")
     slushphone4_data = wallet_analysis.run(data=wallets['slush phone 4'], config=config['slush phone 4'], wallet='slush phone 4')
 
+    time.sleep(10)
+
+    logging.info("Running the analysis for Bitget wallet...")
+    bitget_data = wallet_analysis.run(data=wallets['bitget'], config=config['bitget'], wallet='bitget')
+    logging.info("Running the analysis for Bybit wallet...")
+    bybit_data = wallet_analysis.run(data=wallets['bybit'], config=config['bybit'], wallet='bybit')
+    logging.info("Running the analysis for Photon wallet...")
+    photon_data = wallet_analysis.run(data=wallets['photon'], config=config['photon'], wallet='photon')
+
     # create df with relevant metrics
     logging.info("Creating metrics tables and plots...")
     calculate_metrics(phantom_data=phantom_data, phantom2_data=phantom2_data, solfl_data=solfl_data, solfl2_data=solfl2_data,
@@ -94,7 +104,8 @@ def run():
                       phantomtablet1_data=phantomtablet1_data, phantomtablet2_data=phantomtablet2_data, solfltablet1_data=solfltablet1_data, solfltablet2_data=solfltablet2_data,
                       slushlaptop1_data=slushlaptop1_data, slushlaptop2_data=slushlaptop2_data, backpacklaptop1_data=backpacklaptop1_data,backpacklaptop2_data=backpacklaptop2_data,
                       backpacklaptop3_data=backpacklaptop3_data, backpacklaptop4_data=backpacklaptop4_data, backpackphone1_data=backpackphone1_data, backpackphone2_data=backpackphone2_data,
-                      slushphone1_data=slushphone1_data, slushphone2_data=slushphone2_data, slushphone3_data=slushphone3_data, slushphone4_data=slushphone4_data)
+                      slushphone1_data=slushphone1_data, slushphone2_data=slushphone2_data, slushphone3_data=slushphone3_data, slushphone4_data=slushphone4_data,
+                      bitget_data=bitget_data, bybit_data=bybit_data, photon_data=photon_data)
 
     # create bar plot with ROI
     # plot_roi(metrics)

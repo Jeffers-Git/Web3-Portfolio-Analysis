@@ -144,7 +144,8 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
                       phantomtablet1_data, phantomtablet2_data, solfltablet1_data, solfltablet2_data,
                       slushlaptop1_data, slushlaptop2_data, backpacklaptop1_data, backpacklaptop2_data,
                       backpacklaptop3_data, backpacklaptop4_data, backpackphone1_data, backpackphone2_data,
-                      slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data):
+                      slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data,
+                      bitget_data, bybit_data, photon_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param phantom_data:
@@ -158,13 +159,55 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
     :return:
     """
 
+    # concat all dataframes
+    df_list = [phantom_data, phantom2_data, solfl_data, solfl2_data,
+              backpack_data, metamask_data, okx_data, seeker_data,
+              phantomtablet1_data, phantomtablet2_data, solfltablet1_data, solfltablet2_data,
+              slushlaptop1_data, slushlaptop2_data, backpacklaptop1_data, backpacklaptop2_data,
+              backpacklaptop3_data, backpacklaptop4_data, backpackphone1_data, backpackphone2_data,
+              slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data,
+               bitget_data, bybit_data, photon_data]
+    big_df = pd.concat(df_list, ignore_index=True)
+
+    # group by ticker and sum 'total value'
+    result = big_df.groupby("ticker", as_index=False)['total value'].sum()
+    result['total value'] = result['total value'].round(2)
+
+    total_value = result["total value"].sum().round(2)
+
+    # add percentage column rounded to 2 decimals
+    result["percentage"] = (result["total value"] / total_value * 100).round(2)
+
+    # add total row
+    total = pd.DataFrame({
+        "ticker": ["Total"],
+        "total value": [total_value],
+        "percentage": [100.00]
+    })
+
+    # concat total row temporarily for sorting
+    metrics = pd.concat([result, total], ignore_index=True)
+
+    # separate total row, sort rest by percentage descending
+    metrics_no_total = metrics[metrics['ticker'] != "Total"].sort_values(
+        by='percentage', ascending=False
+    )
+
+    # concat sorted rows with total at the end
+    metrics_per_ticker = pd.concat([metrics_no_total, metrics[metrics['ticker'] == "Total"]], ignore_index=True)
+
+    # format columns as strings with 2 decimals
+    metrics_per_ticker['total value'] = metrics_per_ticker['total value'].map(lambda x: f"{x:.2f}")
+    metrics_per_ticker['percentage'] = metrics_per_ticker['percentage'].map(lambda x: f"{x:.2f}%")
+    metrics_per_ticker.to_csv('results/metrics_per_ticker.csv')
+
+
     keys = ['Metric', 'Phantom', 'Phantom 2', 'Solflare', 'Solflare 2',
             'Backpack', 'Metamask', 'OKX', 'Seeker',
             'Phantom Tablet 1', 'Phantom Tablet 2', 'Solflare Tablet 1', 'Solflare Tablet 2',
             'Slush Laptop 1', 'Slush Laptop 2', 'Backpack Laptop 1', 'Backpack Laptop 2',
             'Backpack Laptop 3', 'Backpack Laptop 4', 'Backpack Phone 1', 'Backpack Phone 2',
-            'Slush Phone 1', 'Slush Phone 2', 'Slush Phone 3', 'Slush Phone 4']
-
+            'Slush Phone 1', 'Slush Phone 2', 'Slush Phone 3', 'Slush Phone 4', 'Bitget', 'Bybit', 'Photon']
 
     portfolio_value = {}
 
@@ -173,7 +216,8 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
                     phantomtablet1_data['total value'].sum(), phantomtablet2_data['total value'].sum(), solfltablet1_data['total value'].sum(), solfltablet2_data['total value'].sum(),
                     slushlaptop1_data['total value'].sum(), slushlaptop2_data['total value'].sum(), backpacklaptop1_data['total value'].sum(), backpacklaptop2_data['total value'].sum(),
                     backpacklaptop3_data['total value'].sum(), backpacklaptop4_data['total value'].sum(), backpackphone1_data['total value'].sum(), backpackphone2_data['total value'].sum(),
-                    slushphone1_data['total value'].sum(), slushphone2_data['total value'].sum(), slushphone3_data['total value'].sum(), slushphone4_data['total value'].sum()]
+                    slushphone1_data['total value'].sum(), slushphone2_data['total value'].sum(), slushphone3_data['total value'].sum(), slushphone4_data['total value'].sum(),
+                   bitget_data['total value'].sum(), bybit_data['total value'].sum(), photon_data['total value'].sum()]
     portfolio_value = fill_dict(portfolio_value, keys, port_values)
     portfolio_value['Total'] = sum_numeric_values(portfolio_value)
 

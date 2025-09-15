@@ -78,6 +78,15 @@ slush phone 3:
 slush phone 4:
   ticker_coingecko: []
 
+bitget:
+  ticker_coingecko: ['SWTCH']
+
+bybit:
+  ticker_coingecko: []
+
+photon:
+  ticker_coingecko: ['CODEC']
+
 
 
 
