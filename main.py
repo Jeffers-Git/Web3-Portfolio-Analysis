@@ -36,7 +36,7 @@ def run():
     logging.info("Running the analysis for Solflare2 wallet...")
     solfl2_data = wallet_analysis.run(data=wallets['solflare2'], config=config['solflare2'], wallet='solflare2')
 
-    time.sleep(10)
+    time.sleep(15)
 
     logging.info("Running the analysis for Backpack wallet...")
     backpack_data = wallet_analysis.run(data=wallets['backpack'], config=config['backpack'], wallet='backpack')
@@ -47,7 +47,7 @@ def run():
     logging.info("Running the analysis for Seeker wallet...")
     seeker_data = wallet_analysis.run(data=wallets['seeker'], config=config['seeker'], wallet='seeker')
 
-    time.sleep(10)
+    time.sleep(15)
 
     logging.info("Running the analysis for Phantom tablet 1 wallet...")
     phantomtablet1_data = wallet_analysis.run(data=wallets['phantom tablet 1'], config=config['phantom tablet 1'], wallet='phantom tablet 1')
@@ -58,7 +58,7 @@ def run():
     logging.info("Running the analysis for Solflare tablet 2 wallet...")
     solfltablet2_data = wallet_analysis.run(data=wallets['solflare tablet 2'], config=config['solflare tablet 2'], wallet='solflare tablet 2')
 
-    time.sleep(10)
+    time.sleep(25)
 
     logging.info("Running the analysis for Slush laptop 1 wallet...")
     slushlaptop1_data = wallet_analysis.run(data=wallets['slush laptop 1'], config=config['slush laptop 1'], wallet='slush laptop 1')
@@ -73,7 +73,7 @@ def run():
     logging.info("Running the analysis for Backpack laptop 4 wallet...")
     backpacklaptop4_data = wallet_analysis.run(data=wallets['backpack laptop 4'], config=config['backpack laptop 4'], wallet='backpack laptop 4')
 
-    time.sleep(10)
+    time.sleep(25)
 
     logging.info("Running the analysis for Backpack phone 1 wallet...")
     backpackphone1_data = wallet_analysis.run(data=wallets['backpack phone 1'], config=config['backpack phone 1'], wallet='backpack phone 1')
@@ -88,7 +88,7 @@ def run():
     logging.info("Running the analysis for Slush phone 4 wallet...")
     slushphone4_data = wallet_analysis.run(data=wallets['slush phone 4'], config=config['slush phone 4'], wallet='slush phone 4')
 
-    time.sleep(10)
+    time.sleep(15)
 
     logging.info("Running the analysis for Bitget wallet...")
     bitget_data = wallet_analysis.run(data=wallets['bitget'], config=config['bitget'], wallet='bitget')
