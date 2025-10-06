@@ -82,7 +82,7 @@ bitget:
   ticker_coingecko: ['SWTCH']
 
 bybit:
-  ticker_coingecko: []
+  ticker_coingecko: ['SKATE']
 
 photon:
   ticker_coingecko: ['CODEC']
