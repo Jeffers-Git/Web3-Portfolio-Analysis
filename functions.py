@@ -231,6 +231,9 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
     date_path = f'results/metrics over time/{today}.csv'
     metrics_rounded.to_csv(date_path)
 
+    date_path_ticker = f'results/metrics per ticker over time/{today}.csv'
+    metrics_per_ticker.to_csv(date_path_ticker)
+
 
 def plot_roi(df):
     fig, ax = plt.subplots(figsize=(12, 8))
