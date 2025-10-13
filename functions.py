@@ -170,8 +170,8 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
     big_df = pd.concat(df_list, ignore_index=True)
 
     # group by ticker and sum 'total value'
-    result = big_df.groupby("ticker", as_index=False)['total value'].sum()
-    result['total value'] = result['total value'].round(2)
+    result = big_df.groupby("ticker", as_index=False)[['amount', 'total value']].sum()
+    result[['amount', 'total value']] = result[['amount', 'total value']].round(2)
 
     total_value = result["total value"].sum().round(2)
 
@@ -181,6 +181,7 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
     # add total row
     total = pd.DataFrame({
         "ticker": ["Total"],
+        "amount": ['nan'],
         "total value": [total_value],
         "percentage": [100.00]
     })
