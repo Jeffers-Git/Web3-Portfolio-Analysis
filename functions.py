@@ -145,7 +145,7 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
                       slushlaptop1_data, slushlaptop2_data, backpacklaptop1_data, backpacklaptop2_data,
                       backpacklaptop3_data, backpacklaptop4_data, backpackphone1_data, backpackphone2_data,
                       slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data,
-                      bitget_data, bybit_data, photon_data):
+                      bitget_data, bybit_data, photon_data, ledger1_data):
     """
     This function calculates relevant metrics for the performance of the wallets
     :param phantom_data:
@@ -166,7 +166,7 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
               slushlaptop1_data, slushlaptop2_data, backpacklaptop1_data, backpacklaptop2_data,
               backpacklaptop3_data, backpacklaptop4_data, backpackphone1_data, backpackphone2_data,
               slushphone1_data, slushphone2_data, slushphone3_data, slushphone4_data,
-               bitget_data, bybit_data, photon_data]
+               bitget_data, bybit_data, photon_data, ledger1_data]
     big_df = pd.concat(df_list, ignore_index=True)
 
     # group by ticker and sum 'total value'
@@ -218,7 +218,7 @@ def calculate_metrics(phantom_data, phantom2_data, solfl_data, solfl2_data,
                     slushlaptop1_data['total value'].sum(), slushlaptop2_data['total value'].sum(), backpacklaptop1_data['total value'].sum(), backpacklaptop2_data['total value'].sum(),
                     backpacklaptop3_data['total value'].sum(), backpacklaptop4_data['total value'].sum(), backpackphone1_data['total value'].sum(), backpackphone2_data['total value'].sum(),
                     slushphone1_data['total value'].sum(), slushphone2_data['total value'].sum(), slushphone3_data['total value'].sum(), slushphone4_data['total value'].sum(),
-                   bitget_data['total value'].sum(), bybit_data['total value'].sum(), photon_data['total value'].sum()]
+                   bitget_data['total value'].sum(), bybit_data['total value'].sum(), photon_data['total value'].sum(), ledger1_data['total value'].sum()]
     portfolio_value = fill_dict(portfolio_value, keys, port_values)
     portfolio_value['Total'] = sum_numeric_values(portfolio_value)
 

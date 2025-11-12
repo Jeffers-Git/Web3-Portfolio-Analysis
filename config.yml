@@ -87,6 +87,9 @@ bybit:
 photon:
   ticker_coingecko: ['CODEC']
 
+ledger1:
+  ticker_coingecko: []
+
 
 
 
