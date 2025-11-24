@@ -24,7 +24,7 @@ def run():
                                                         'slush laptop 1', 'slush laptop 2', 'backpack laptop 1', 'backpack laptop 2',
                                                         'backpack laptop 3', 'backpack laptop 4', 'backpack phone 1', 'backpack phone 2',
                                                         'slush phone 1', 'slush phone 2', 'slush phone 3', 'slush phone 4',
-                                                        'bitget', 'bybit', 'photon', 'ledger1'])
+                                                        'bitget', 'bybit', 'photon', 'ledger new', 'monad main', 'monad NFTs', 'backpack mon', 'kraken'])
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for Phantom wallet...")
@@ -96,8 +96,19 @@ def run():
     bybit_data = wallet_analysis.run(data=wallets['bybit'], config=config['bybit'], wallet='bybit')
     logging.info("Running the analysis for Photon wallet...")
     photon_data = wallet_analysis.run(data=wallets['photon'], config=config['photon'], wallet='photon')
-    logging.info("Running the analysis for Ledger 1 wallet...")
-    ledger1_data = wallet_analysis.run(data=wallets['ledger1'], config=config['ledger1'], wallet='ledger1')
+    logging.info("Running the analysis for Ledger new wallet...")
+    ledgernew_data = wallet_analysis.run(data=wallets['ledger new'], config=config['ledger new'], wallet='ledger new')
+
+    time.sleep(25)
+
+    logging.info("Running the analysis for Monad main wallet...")
+    monadmain_data = wallet_analysis.run(data=wallets['monad main'], config=config['monad main'], wallet='monad main')
+    logging.info("Running the analysis for monad NFTs wallet...")
+    monadnfts_data = wallet_analysis.run(data=wallets['monad NFTs'], config=config['monad NFTs'], wallet='monad NFTs')
+    logging.info("Running the analysis for backpack Monad wallet...")
+    backpackmon_data = wallet_analysis.run(data=wallets['backpack mon'], config=config['backpack mon'], wallet='backpack mon')
+    logging.info("Running the analysis for Kraken wallet...")
+    kraken_data = wallet_analysis.run(data=wallets['kraken'], config=config['kraken'], wallet='kraken')
 
     # create df with relevant metrics
     logging.info("Creating metrics tables and plots...")
@@ -107,7 +118,8 @@ def run():
                       slushlaptop1_data=slushlaptop1_data, slushlaptop2_data=slushlaptop2_data, backpacklaptop1_data=backpacklaptop1_data,backpacklaptop2_data=backpacklaptop2_data,
                       backpacklaptop3_data=backpacklaptop3_data, backpacklaptop4_data=backpacklaptop4_data, backpackphone1_data=backpackphone1_data, backpackphone2_data=backpackphone2_data,
                       slushphone1_data=slushphone1_data, slushphone2_data=slushphone2_data, slushphone3_data=slushphone3_data, slushphone4_data=slushphone4_data,
-                      bitget_data=bitget_data, bybit_data=bybit_data, photon_data=photon_data, ledger1_data=ledger1_data)
+                      bitget_data=bitget_data, bybit_data=bybit_data, photon_data=photon_data, ledgernew_data=ledgernew_data,
+                      monadmain_data=monadmain_data, monadnfts_data=monadnfts_data, backpackmon_data=backpackmon_data, kraken_data=kraken_data)
 
     # create bar plot with ROI
     # plot_roi(metrics)

@@ -87,7 +87,19 @@ bybit:
 photon:
   ticker_coingecko: ['CODEC']
 
-ledger1:
+ledger new:
+  ticker_coingecko: []
+
+monad main:
+  ticker_coingecko: []
+
+monad NFTs:
+  ticker_coingecko: []
+
+backpack mon:
+  ticker_coingecko: []
+
+kraken:
   ticker_coingecko: []
 
 
