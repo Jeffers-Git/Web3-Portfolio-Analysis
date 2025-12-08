@@ -24,7 +24,8 @@ def run():
                                                         'slush laptop 1', 'slush laptop 2', 'backpack laptop 1', 'backpack laptop 2',
                                                         'backpack laptop 3', 'backpack laptop 4', 'backpack phone 1', 'backpack phone 2',
                                                         'slush phone 1', 'slush phone 2', 'slush phone 3', 'slush phone 4',
-                                                        'bitget', 'bybit', 'photon', 'ledger new', 'monad main', 'monad NFTs', 'backpack mon', 'kraken'])
+                                                        'bitget', 'bybit', 'photon', 'ledger new', 'monad main', 'monad NFTs', 'backpack mon',
+                                                      'monad snipe', 'monad iphone', 'monad mevx'])
 
     # calculate dollar value for all wallets
     logging.info("Running the analysis for Phantom wallet...")
@@ -107,8 +108,13 @@ def run():
     monadnfts_data = wallet_analysis.run(data=wallets['monad NFTs'], config=config['monad NFTs'], wallet='monad NFTs')
     logging.info("Running the analysis for backpack Monad wallet...")
     backpackmon_data = wallet_analysis.run(data=wallets['backpack mon'], config=config['backpack mon'], wallet='backpack mon')
-    logging.info("Running the analysis for Kraken wallet...")
-    kraken_data = wallet_analysis.run(data=wallets['kraken'], config=config['kraken'], wallet='kraken')
+    logging.info("Running the analysis for Monad snipe wallet...")
+    monadsnipe_data = wallet_analysis.run(data=wallets['monad snipe'], config=config['monad snipe'], wallet='monad snipe')
+
+    logging.info("Running the analysis for Monad iphone wallet...")
+    monadiphone_data = wallet_analysis.run(data=wallets['monad iphone'], config=config['monad iphone'], wallet='monad iphone')
+    logging.info("Running the analysis for Monad mevx wallet...")
+    monadmevx_data = wallet_analysis.run(data=wallets['monad mevx'], config=config['monad mevx'], wallet='monad mevx')
 
     # create df with relevant metrics
     logging.info("Creating metrics tables and plots...")
@@ -119,7 +125,8 @@ def run():
                       backpacklaptop3_data=backpacklaptop3_data, backpacklaptop4_data=backpacklaptop4_data, backpackphone1_data=backpackphone1_data, backpackphone2_data=backpackphone2_data,
                       slushphone1_data=slushphone1_data, slushphone2_data=slushphone2_data, slushphone3_data=slushphone3_data, slushphone4_data=slushphone4_data,
                       bitget_data=bitget_data, bybit_data=bybit_data, photon_data=photon_data, ledgernew_data=ledgernew_data,
-                      monadmain_data=monadmain_data, monadnfts_data=monadnfts_data, backpackmon_data=backpackmon_data, kraken_data=kraken_data)
+                      monadmain_data=monadmain_data, monadnfts_data=monadnfts_data, backpackmon_data=backpackmon_data, monadsnipe_data=monadsnipe_data,
+                      monadiphone_data=monadiphone_data, monadmevx_data=monadmevx_data)
 
     # create bar plot with ROI
     # plot_roi(metrics)

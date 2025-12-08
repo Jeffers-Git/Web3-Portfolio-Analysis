@@ -22,7 +22,7 @@ backpack:
   ticker_coingecko: []
 
 metamask:
-  ticker_coingecko: ['EIGEN']
+  ticker_coingecko: ['EIGEN', 'CHOG']
 
 okx:
   ticker_coingecko: ['KAITO']
@@ -99,8 +99,14 @@ monad NFTs:
 backpack mon:
   ticker_coingecko: []
 
-kraken:
+monad snipe:
   ticker_coingecko: []
+
+monad iphone:
+  ticker_coingecko: []
+
+monad mevx:
+  ticker_coingecko: ['CHOG']
 
 
 
